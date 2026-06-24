@@ -1,0 +1,24 @@
+{:lexicon 1
+ :id "com.etzhayyim.govmunicipality.permitsFinalizedRecord"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["tid" "permitsFinalizedRecordId" "permitApplicationId" "authoritySignature"]
+    :properties {:tid {:type "string" :description "Transaction ID"}
+                 :permitsFinalizedRecordId {:type "string" :description "Unique finalization record identifier"}
+                 :permitApplicationId {:type "string" :description "Ref to original permit application"}
+                 :jurisdiction {:type "string" :description "ISO jurisdiction code"}
+                 :authorityDid {:type "string" :description "Municipal authority signing officer DID"}
+                 :authoritySignature {:type "string" :description "Digital signature (Ed25519, no-server-key)"}
+                 :allInspectionsApproved {:type "boolean" :description "All inspection phases passed/conditional"}
+                 :occupancyStatus {:type "string" :description "Clearance status (approved/conditional/denied)"}
+                 :finalizedAt {:type "string" :description "ISO-8601 finalization timestamp"}
+                 :noticeExpiresAt {:type "string" :description "ISO-8601 end of 30-day public notice period"}
+    }
+   }
+  }
+ }
+}

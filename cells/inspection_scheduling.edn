@@ -1,0 +1,25 @@
+;; gov-municipality 官 — inspection_scheduling cell (langgraph, WASM runtime)
+;; ADR-2605250800 · Phase 0 R0 scaffold
+{:cell/id "inspection_scheduling"
+ :cell/glyph "官"
+ :cell/kind :langgraph
+ :cell/runtime :wasm
+ :cell/entry "py/agent.py"
+ :cell/handler "handle_inspection_scheduling"
+ :cell/doc "Approved permitApplication → jurisdiction inspection rules → schedule 5 canonical phases (foundation/structural/MEP/finishing/commissioning) + inspection requirements per phase. Input: permitApplicationId, constructionPhases. Output: inspectionSchedule (phase → date + requirements list)."
+ :cell/state-graph
+ {:nodes [:fetch-permit-status :jurisdiction-rules :schedule-phases :emit-schedule]
+  :entry :fetch-permit-status
+  :edges [[:fetch-permit-status :jurisdiction-rules]
+          [:jurisdiction-rules :schedule-phases]
+          [:schedule-phases :emit-schedule]
+          [:emit-schedule :end]]}
+ :cell/llm
+ {:provider :murakumo
+  :endpoint "127.0.0.1:4000"
+  :model "gemma3:4b"
+  :charter-rider true}
+ :cell/gates ["G1" "G15" "G16" "G19"]
+ :cell/kotoba
+ {:reads [:permit-application/id :permit-application/jurisdiction :permit-application/state :jurisdiction/inspection-cadence]
+  :writes [:inspection-schedule/id :inspection-schedule/permit-application :inspection-schedule/phases]}}

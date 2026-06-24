@@ -1,0 +1,23 @@
+{:lexicon 1
+ :id "com.etzhayyim.govmunicipality.jurisdictionMetadata"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["tid" "jurisdictionId" "jurisdictionName" "country"]
+    :properties {:tid {:type "string" :description "Transaction ID"}
+                 :jurisdictionId {:type "string" :description "ISO jurisdiction code (e.g., JP-13, US-CA)"}
+                 :jurisdictionName {:type "string" :description "Human-readable jurisdiction name (Tokyo, California)"}
+                 :country {:type "string" :description "ISO 3166-1 alpha-2 (JP, US, DE)"}
+                 :rulesVersion {:type "string" :description "Jurisdiction code version (year or official publication number)"}
+                 :inspectionCadence {:type "array" :items {:type "string"} :description "Standard inspection phases (foundation/structural/MEP/finishing/commissioning)"}
+                 :permitTemplateVersion {:type "string" :description "Latest template version for this jurisdiction"}
+                 :rpcEndpoint {:type "string" :description "Open-source RPC endpoint (G1, verified)"}
+                 :openSourceRepository {:type "string" :description "Git repository with jurisdiction rules (Apache 2.0)"}
+    }
+   }
+  }
+ }
+}

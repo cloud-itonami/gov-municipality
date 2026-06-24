@@ -1,0 +1,14 @@
+;; gov-municipality 官 — ledger cell (datalog, kotoba runtime)
+;; ADR-2605250800 · Phase 0 R0 scaffold
+{:cell/id "ledger"
+ :cell/glyph "官"
+ :cell/kind :datalog
+ :cell/runtime :kotoba
+ :cell/doc "Read-only ledger of all permit applications, inspections, and finalizations. Pure Datalog queries over the canonical kotoba Datom log (no mutations). Reports: application history, inspection schedule index, sign-off audit trail."
+ :cell/gates ["G16"]
+ :cell/kotoba
+ {:reads [:permit-application/id :permit-application/member-did :permit-application/jurisdiction :permit-application/state
+          :permit-application/scope :permit-application/timestamp
+          :inspection-schedule/id :inspection-schedule/permit-application :inspection-schedule/phases
+          :permits-finalized-record/id :permits-finalized-record/permit-application :permits-finalized-record/authority-did]
+  :writes []}}

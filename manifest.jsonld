@@ -1,0 +1,61 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://etzhayyim.com/.well-known/etzhayyim-context.jsonld"
+  ],
+  "id": "did:web:etzhayyim.com:gov-municipality",
+  "type": ["Context", "Organization"],
+  "name": "gov-municipality (政府・自治体 permitting Tier-B actor)",
+  "description": "Phase 0 regulatory & permitting actor. Coordinates building permit submission, inspections, and sign-off across jurisdictions per ADR-2605250800.",
+  "publicKey": [
+    {
+      "id": "did:web:etzhayyim.com:gov-municipality#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "publicKeyMultibase": "z6MkrG6K7uK4cQ..."
+    }
+  ],
+  "cells": [
+    {
+      "id": "did:web:etzhayyim.com:gov-municipality/permit-submission",
+      "type": "etzhayyim:PregCell",
+      "name": "permit_submission",
+      "murakumoNode": "judah"
+    },
+    {
+      "id": "did:web:etzhayyim.com:gov-municipality/inspection-scheduling",
+      "type": "etzhayyim:PregCell",
+      "name": "inspection_scheduling",
+      "murakumoNode": "benjamin"
+    },
+    {
+      "id": "did:web:etzhayyim.com:gov-municipality/final-sign-off",
+      "type": "etzhayyim:PregCell",
+      "name": "final_sign_off",
+      "murakumoNode": "dan"
+    }
+  ],
+  "lexicons": [
+    "com.etzhayyim.gov.agency",
+    "com.etzhayyim.gov.consult",
+    "com.etzhayyim.gov.municipality",
+    "com.etzhayyim.gov.official",
+    "com.etzhayyim.gov.procedure",
+    "com.etzhayyim.gov.permitApplication",
+    "com.etzhayyim.gov.inspectionSchedule",
+    "com.etzhayyim.gov.permitsFinalizedRecord"
+  ],
+  "constitutionalGates": [
+    {"gate": "G1", "requirement": "All jurisdiction RPC calls open-source verified"},
+    {"gate": "G2", "requirement": "Permit documents IPFS-pinned before construction"},
+    {"gate": "G3", "requirement": "Municipal authority witness signature (≥1)"},
+    {"gate": "G5", "requirement": "Charter Rider compliance (no gatekeeping)"},
+    {"gate": "G9", "requirement": "30-day public notice before finalization"}
+  ],
+  "nonGoals": [
+    "N1: Zoning variance negotiation",
+    "N2: Environmental impact assessment",
+    "N3: Historical preservation review",
+    "N4: Utility company approvals",
+    "N5: Financing/cost estimation"
+  ]
+}

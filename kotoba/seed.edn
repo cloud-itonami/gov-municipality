@@ -1,0 +1,97 @@
+;; gov-municipality 官 — kotoba seed data (representative, R0)
+;; ADR-2605250800 · :sourcing :representative (NOT authoritative)
+;; Three worked examples: Japanese (Tokyo/JP-13), US (California/US-CA), EU (Bavaria/DE-BY) jurisdiction metadata + sample permit application.
+
+[;; ════════════ Jurisdiction: Tokyo (JP-13) ════════════
+ {:jurisdiction/id "JP-13"
+  :jurisdiction/jurisdiction-name "Tokyo Metropolitan Government"
+  :jurisdiction/country "JP"
+  :jurisdiction/rules-version "2023-09-01"
+  :jurisdiction/inspection-cadence "foundation"
+  :jurisdiction/inspection-cadence "structural"
+  :jurisdiction/inspection-cadence "mep"
+  :jurisdiction/inspection-cadence "finishing"
+  :jurisdiction/inspection-cadence "commissioning"
+  :jurisdiction/rpc-endpoint "https://open-registry.tokyo.jp/api/v1"
+  :sourcing :representative}
+
+ ;; ════════════ Jurisdiction: California (US-CA) ════════════
+ {:jurisdiction/id "US-CA"
+  :jurisdiction/jurisdiction-name "California State"
+  :jurisdiction/country "US"
+  :jurisdiction/rules-version "2022-01-01"
+  :jurisdiction/inspection-cadence "foundation"
+  :jurisdiction/inspection-cadence "structural"
+  :jurisdiction/inspection-cadence "mep"
+  :jurisdiction/inspection-cadence "finishing"
+  :jurisdiction/inspection-cadence "commissioning"
+  :jurisdiction/rpc-endpoint "https://dca.ca.gov/api/permits"
+  :sourcing :representative}
+
+ ;; ════════════ Jurisdiction: Bavaria (DE-BY) ════════════
+ {:jurisdiction/id "DE-BY"
+  :jurisdiction/jurisdiction-name "Freistaat Bayern"
+  :jurisdiction/country "DE"
+  :jurisdiction/rules-version "2023-03-15"
+  :jurisdiction/inspection-cadence "foundation"
+  :jurisdiction/inspection-cadence "structural"
+  :jurisdiction/inspection-cadence "mep"
+  :jurisdiction/inspection-cadence "finishing"
+  :jurisdiction/inspection-cadence "commissioning"
+  :jurisdiction/rpc-endpoint "https://bauamt.bayern.de/api/permits"
+  :sourcing :representative}
+
+ ;; ════════════ Permit Application: Tokyo Residential ════════════
+ {:permit-application/id "pa.tokyo.demo.0001"
+  :permit-application/member-did "did:web:etzhayyim.com:member:a1b2c3d4"
+  :permit-application/jurisdiction :JP-13
+  :permit-application/building-type "residential"
+  :permit-application/scope "3-story residential apartment building, 800 m² GFA, wood-frame construction"
+  :permit-application/total-cost 150000000
+  :permit-application/gfa-m2 800.0
+  :permit-application/site-id "Tokyo-13-Shibuya-1-2-3"
+  :permit-application/drawings-cid "ipfs://QmTokyo001ABC..."
+  :permit-application/state :submitted
+  :permit-application/submitted-at "2026-06-02T10:30:00Z"
+  :sourcing :representative}
+
+ ;; ════════════ Inspection Schedule: Tokyo Residential ════════════
+ {:inspection-schedule/id "is.tokyo.demo.0001"
+  :inspection-schedule/permit-application :pa.tokyo.demo.0001
+  :inspection-schedule/jurisdiction :JP-13
+  :inspection-schedule/phase "foundation"
+  :inspection-schedule/phase "structural"
+  :inspection-schedule/phase "mep"
+  :inspection-schedule/phase "finishing"
+  :inspection-schedule/phase "commissioning"
+  :inspection-schedule/phase-date "2026-08-15T09:00:00Z"
+  :inspection-schedule/phase-date "2026-09-01T14:00:00Z"
+  :inspection-schedule/phase-date "2026-09-15T10:30:00Z"
+  :inspection-schedule/phase-date "2026-10-01T16:00:00Z"
+  :inspection-schedule/phase-date "2026-10-15T11:00:00Z"
+  :inspection-schedule/inspector-did "did:web:tokyo-building-authority.jp:inspector:i001"
+  :inspection-schedule/created-at "2026-06-05T12:00:00Z"
+  :sourcing :representative}
+
+ ;; ════════════ Permit Finalized: Tokyo Residential (Approved) ════════════
+ {:permits-finalized-record/id "pfr.tokyo.demo.0001"
+  :permits-finalized-record/permit-application :pa.tokyo.demo.0001
+  :permits-finalized-record/authority-did "did:web:tokyo-building-authority.jp:director:d001"
+  :permits-finalized-record/authority-signature "EdDSA_base64_encoded_sig_tokyo_001"
+  :permits-finalized-record/all-inspections-approved true
+  :permits-finalized-record/occupancy-status :approved
+  :permits-finalized-record/finalized-at "2026-11-01T09:00:00Z"
+  :permits-finalized-record/notice-expires-at "2026-12-01T23:59:59Z"
+  :sourcing :representative}
+
+ ;; ════════════ Settlement: Tokyo Residential Fee ════════════
+ {:settlement/id "st.tokyo.demo.0001"
+  :settlement/permit-application :pa.tokyo.demo.0001
+  :settlement/rail :usdc-base-l2
+  :settlement/jurisdiction-fee-minor 500000
+  :settlement/tithe-minor 50000
+  :settlement/authority-payout-minor 450000
+  :settlement/state :intent
+  :settlement/member-sig-ref ""
+  :sourcing :representative}
+ ]

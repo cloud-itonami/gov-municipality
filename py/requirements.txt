@@ -1,0 +1,3 @@
+# gov-municipality 官 — Python dependencies (minimal; R0 scaffold)
+# No external LLM (G15 Murakumo-only), no Stripe/fiat (G17), no requests/openai/anthropic
+# (kept for reference; R0 runs offline with kotoba WASM-imported bindings)

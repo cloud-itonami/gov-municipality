@@ -1,0 +1,45 @@
+;; gov-municipality 政府・自治体 — actor manifest (Gen-3 kotoba-native)
+;; Regulatory permitting & inspection — building permit coordination + jurisdiction routing
+;; ADR-2605250800 (R0 scaffold) · 2026-05-26
+{:actor/id        "gov-municipality"
+ :actor/glyph     "官"
+ :actor/tier      :tier-b
+ :actor/domain    "gov-municipality.etzhayyim.com"
+ :actor/purpose   "Phase 0 regulatory & permitting actor. Coordinates building permit submission, inspections, and sign-off across jurisdictions per ADR-2605250800. Member applies for jurisdiction-specific building permits; cell network validates, routes, and tracks to completion. No gatekeeping — Charter Rider §1.16 (member owns permit process). Murakumo-only inference, kotoba-EAVT-native state, tithe-non-fiat settlement only."
+ :actor/status    :r0
+ :actor/adr       "2605250800"
+ :actor/related   ["2605250800"]
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "open-source-rpc"          :gate/rule "All jurisdiction RPC calls open-source verified (no proprietary API wrappers)"}
+  {:gate/id "G2"  :gate/name "ipfs-document-pinning"    :gate/rule "Permit documents IPFS-pinned before construction equipment enters site"}
+  {:gate/id "G3"  :gate/name "witness-authority-sig"    :gate/rule "Municipal authority witness signature (≥1 jurisdiction) required on final record"}
+  {:gate/id "G5"  :gate/name "charter-compliance-gate"  :gate/rule "Charter Rider compliance enforced — no gatekeeping; permits granted within legal timeline"}
+  {:gate/id "G9"  :gate/name "public-notice-period"     :gate/rule "30-day public notice period before permit finalized (mesh transparency)"}
+  {:gate/id "G15" :gate/name "murakumo-only"            :gate/rule "Jurisdiction lookup + permit parsing via Murakumo KotobaLLM (127.0.0.1:4000); external LLM prohibited"}
+  {:gate/id "G16" :gate/name "kotoba-eavt-native"       :gate/rule "Permit application/inspection/sign-off state are kotoba Datoms (no RisingWave/Cypher/G())"}
+  {:gate/id "G17" :gate/name "tithe-non-fiat"           :gate/rule "Jurisdiction fees paid via USDC Base L2 + ERC-4337 + TitheRouter 10% auto-split; no fiat processor"}
+  {:gate/id "G18" :gate/name "no-server-key"            :gate/rule "Member + municipal operator hold signing keys; platform retains no secret (ADR-2605231525)"}
+  {:gate/id "G19" :gate/name "consent-bound"            :gate/rule "Permit submission + inspection scheduling + final sign-off gated behind member explicit consent"}
+  {:gate/id "G20" :gate/name "pii-encrypted-envelope"   :gate/rule "Permit applicant + project details → com.etzhayyim.encrypted.*, DID-bound (ADR-2605181100)"}]
+
+ :actor/cells
+ [{:cell/id "permit_submission"    :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "inspection_scheduling" :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "final_sign_off"        :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "ledger"                :cell/kind :datalog   :cell/runtime :kotoba}]
+
+ :actor/lex
+ [{:lex/id "permitApplication"}
+  {:lex/id "inspectionSchedule"}
+  {:lex/id "permitsFinalizedRecord"}
+  {:lex/id "jurisdictionMetadata"}]
+
+ ;; legacy (gen-1) artifacts pending decommission per Phase 3
+ :actor/legacy
+ {:manifest    "actor-manifest.jsonld"
+  :note "gen-1 jsonld retained for transition period; phase out after legal registration"}}

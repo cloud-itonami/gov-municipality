@@ -1,0 +1,21 @@
+{:lexicon 1
+ :id "com.etzhayyim.govmunicipality.inspectionSchedule"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["tid" "inspectionScheduleId" "permitApplicationId" "phases"]
+    :properties {:tid {:type "string" :description "Transaction ID"}
+                 :inspectionScheduleId {:type "string" :description "Unique schedule identifier"}
+                 :permitApplicationId {:type "string" :description "Ref to permit application"}
+                 :phases {:type "array" :items {:type "object"} :description "Array of inspection phase objects (foundation/structural/MEP/finishing/commissioning)"}
+                 :jurisdiction {:type "string" :description "ISO jurisdiction code"}
+                 :inspectorDid {:type "string" :description "Assigned inspector DID (municipal authority)"}
+                 :createdAt {:type "string" :description "ISO-8601 timestamp"}
+    }
+   }
+  }
+ }
+}

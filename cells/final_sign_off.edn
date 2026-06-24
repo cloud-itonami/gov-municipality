@@ -1,0 +1,24 @@
+;; gov-municipality 官 — final_sign_off cell (langgraph, WASM runtime)
+;; ADR-2605250800 · Phase 0 R0 scaffold
+{:cell/id "final_sign_off"
+ :cell/glyph "官"
+ :cell/kind :langgraph
+ :cell/runtime :wasm
+ :cell/entry "py/agent.py"
+ :cell/handler "handle_final_sign_off"
+ :cell/doc "Completed inspections → validate all phases ≥conditional → request municipal authority signature → emit occupancy clearance. Input: inspectionResults (pass/conditional/fail per phase), defect list. Output: permitsFinalizedRecord (authority signature, occupancy status)."
+ :cell/state-graph
+ {:nodes [:validate-inspections :request-authority-sig :emit-occupancy]
+  :entry :validate-inspections
+  :edges [[:validate-inspections :request-authority-sig]
+          [:request-authority-sig :emit-occupancy]
+          [:emit-occupancy :end]]}
+ :cell/llm
+ {:provider :murakumo
+  :endpoint "127.0.0.1:4000"
+  :model "gemma3:4b"
+  :charter-rider true}
+ :cell/gates ["G3" "G15" "G16" "G18" "G19"]
+ :cell/kotoba
+ {:reads [:inspection-schedule/id :inspection-schedule/phases :inspection-schedule/permit-application]
+  :writes [:permits-finalized-record/id :permits-finalized-record/permit-application :permits-finalized-record/authority-signature]}}

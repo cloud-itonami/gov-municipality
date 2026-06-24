@@ -1,0 +1,190 @@
+;; gov-municipality 官 — kotoba EAVT schema
+;; ADR-2605250800 · R0 scaffold
+;; Building permit state machine: jurisdiction metadata, permit application, inspection scheduling, finalization.
+;; All state is kotoba Datoms — replaces legacy RisingWave/Cypher path (G16).
+
+[;; ───────────────────────────── :jurisdiction/* — regulatory jurisdiction registry ─────────────────────────────
+ {:db/ident :jurisdiction/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "ISO jurisdiction code (JP-13=Tokyo, US-CA=California, DE-BY=Bavaria)"}
+ {:db/ident :jurisdiction/jurisdiction-name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Human-readable jurisdiction name"}
+ {:db/ident :jurisdiction/country
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 3166-1 alpha-2 (JP, US, DE, etc.)"}
+ {:db/ident :jurisdiction/rules-version
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Building code version (year or official publication number)"}
+ {:db/ident :jurisdiction/inspection-cadence
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Standard inspection phases (foundation, structural, MEP, finishing, commissioning)"}
+ {:db/ident :jurisdiction/rpc-endpoint
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Open-source RPC endpoint for jurisdiction lookup (G1)"}
+ {:db/ident :jurisdiction/sourcing
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":authoritative | :representative (R0 seed honesty, G1)"}
+
+ ;; ───────────────────────────── :permit-application/* — permit application state machine ─────────────────────────────
+ {:db/ident :permit-application/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :permit-application/member-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Member DID (applicant, purchasing principal per G19); detail encrypted com.etzhayyim.encrypted.* (G20)"}
+ {:db/ident :permit-application/jurisdiction
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :jurisdiction housing this permit"}
+ {:db/ident :permit-application/building-type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Classification (residential, commercial, industrial, mixed-use)"}
+ {:db/ident :permit-application/scope
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Permit scope (Murakumo-parsed natural language, G15)"}
+ {:db/ident :permit-application/total-cost
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Estimated project cost (USDC minor, 6-dp)"}
+ {:db/ident :permit-application/gfa-m2
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Gross floor area (m²)"}
+ {:db/ident :permit-application/site-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Geographic site identifier (coordinates or address per siteId field)"}
+ {:db/ident :permit-application/drawings-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of CAD/blueprint drawings (IPFS-pinned per G2)"}
+ {:db/ident :permit-application/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":submitted → :reviewing → :approved → :inspecting → :finalized | :rejected (as-of trajectory)"}
+ {:db/ident :permit-application/submitted-at
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 datetime"}
+ {:db/ident :permit-application/settlement
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :settlement (jurisdiction fee, tithe-split only, G17)"}
+
+ ;; ───────────────────────────── :inspection-schedule/* — inspection schedule (G19 gated) ─────────────────────────────
+ {:db/ident :inspection-schedule/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :inspection-schedule/permit-application
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :inspection-schedule/jurisdiction
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :inspection-schedule/phase
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Inspection phases (foundation, structural, MEP, finishing, commissioning)"}
+ {:db/ident :inspection-schedule/phase-date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Scheduled inspection dates (ISO-8601)"}
+ {:db/ident :inspection-schedule/inspector-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Assigned inspector DID (municipal authority officer); no platform key (G18)"}
+ {:db/ident :inspection-schedule/created-at
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 schedule creation timestamp"}
+
+ ;; ───────────────────────────── :permits-finalized-record/* — final sign-off (G3 witness + G18 signature) ─────────────────────────────
+ {:db/ident :permits-finalized-record/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :permits-finalized-record/permit-application
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :permits-finalized-record/authority-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Municipal authority signatory DID (≥1 jurisdiction per G3)"}
+ {:db/ident :permits-finalized-record/authority-signature
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Ed25519 signature (no-server-key, G18)"}
+ {:db/ident :permits-finalized-record/all-inspections-approved
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "All phases ≥conditional (pass or conditional pass)"}
+ {:db/ident :permits-finalized-record/occupancy-status
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":approved | :conditional | :denied"}
+ {:db/ident :permits-finalized-record/finalized-at
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 finalization timestamp"}
+ {:db/ident :permits-finalized-record/notice-expires-at
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "30-day public notice period expiration (G9)"}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter intent (NOT executed; G17) ─────────────────────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :settlement/permit-application
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :settlement/rail
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":usdc-base-l2 (ERC-4337 smart-account via warifu, ADR-2605302000); no fiat/Stripe (G17)"}
+ {:db/ident :settlement/jurisdiction-fee-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Jurisdiction permit fee (USDC minor, 6-dp)"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split → Public Fund (G17)"}
+ {:db/ident :settlement/authority-payout-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "net to jurisdiction (fee − tithe), USDC minor"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (computed, NOT broadcast) | :executed (member-signed, G18). R0 stops at :intent"}
+ {:db/ident :settlement/member-sig-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "member passkey/smart-account signature ref; platform holds no key (G18). absent ⇒ stays :intent"}
+
+ ;; ───────────────────────────── :sbt/* — Adherent SBT eligibility (§3 / G19) ─────────────────────────────
+ {:db/ident :sbt/holder-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "DID of an Adherent SBT holder (member applicant)"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "active Adherent SBT? required for permit submission gate (§3 / G19)"}]

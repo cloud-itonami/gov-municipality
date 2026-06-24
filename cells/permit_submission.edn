@@ -1,0 +1,25 @@
+;; gov-municipality 官 — permit_submission cell (langgraph, WASM runtime)
+;; ADR-2605250800 · Phase 0 R0 scaffold
+{:cell/id "permit_submission"
+ :cell/glyph "官"
+ :cell/kind :langgraph
+ :cell/runtime :wasm
+ :cell/entry "py/agent.py"
+ :cell/handler "handle_permit_submission"
+ :cell/doc "Member 建設プロジェクト → siteId extract → jurisdiction lookup → template selection → application formation. Input: projectScope (siteId, buildingType, totalCost, GFA_m2). Output: permitApplicationId + jurisdiction metadata."
+ :cell/state-graph
+ {:nodes [:parse-scope :jurisdiction-lookup :template-selection :application-formation]
+  :entry :parse-scope
+  :edges [[:parse-scope :jurisdiction-lookup]
+          [:jurisdiction-lookup :template-selection]
+          [:template-selection :application-formation]
+          [:application-formation :end]]}
+ :cell/llm
+ {:provider :murakumo
+  :endpoint "127.0.0.1:4000"
+  :model "gemma3:4b"
+  :charter-rider true}
+ :cell/gates ["G1" "G15" "G16" "G19" "G20"]
+ :cell/kotoba
+ {:reads [:jurisdiction/id :jurisdiction/jurisdiction-name :jurisdiction/country :jurisdiction/rules-version]
+  :writes [:permit-application/id :permit-application/member-did :permit-application/jurisdiction :permit-application/scope]}}
