@@ -1,5 +1,0 @@
-__pycache__/
-*.pyc
-*.wasm
-*.egg-info/
-.pytest_cache/

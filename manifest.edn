@@ -4,6 +4,7 @@
 {:actor/id        "gov-municipality"
  :actor/glyph     "官"
  :actor/tier      :tier-b
+ :actor/integrates ["infra-utility-connect"]
  :actor/domain    "gov-municipality.etzhayyim.com"
  :actor/purpose   "Phase 0 regulatory & permitting actor. Coordinates building permit submission, inspections, and sign-off across jurisdictions per ADR-2605250800. Member applies for jurisdiction-specific building permits; cell network validates, routes, and tracks to completion. No gatekeeping — Charter Rider §1.16 (member owns permit process). Murakumo-only inference, kotoba-EAVT-native state, tithe-non-fiat settlement only."
  :actor/status    :r0
