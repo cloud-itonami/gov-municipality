@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # gov-municipality 官 — run the permitting actor test suite with one command.
 # Exits non-zero on any failure (deploy-gate friendly).
-# NOTE: the actor dir is gov-municipality (hyphen); bb resolves the ns
-#       gov-municipality.methods.* via the 20-actors/gov_municipality symlink
-#       (underscore alias created alongside this actor's cljc port).
+# Namespace paths use Clojure's underscore mapping. Build an ephemeral classpath
+# alias so this standalone repository does not depend on the retired root alias.
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$ROOT/../.." && pwd)"
 rc=0
-
-BB_CP="20-actors"
+CP_ROOT="$(mktemp -d)"
+mkdir -p "$CP_ROOT/gov_municipality"
+for entry in cells methods kotoba; do ln -s "$ROOT/$entry" "$CP_ROOT/gov_municipality/$entry"; done
+trap 'rm -rf "$CP_ROOT"' EXIT
 
 run_cljc() {
   local ns="$1"
   echo "==> gov-municipality [cljc] $ns"
-  ( cd "$REPO_ROOT" && bb --classpath "$BB_CP" -e \
+  ( cd "$ROOT" && bb --classpath "$CP_ROOT" -e \
     "(require (quote clojure.test) (quote ${ns}))(let [r (clojure.test/run-tests (quote ${ns}))](System/exit (if (zero? (+ (:fail r) (:error r))) 0 1)))" ) || rc=1
 }
 

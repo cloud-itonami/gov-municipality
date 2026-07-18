@@ -7,11 +7,7 @@
   :jurisdiction/jurisdiction-name "Tokyo Metropolitan Government"
   :jurisdiction/country "JP"
   :jurisdiction/rules-version "2023-09-01"
-  :jurisdiction/inspection-cadence "foundation"
-  :jurisdiction/inspection-cadence "structural"
-  :jurisdiction/inspection-cadence "mep"
-  :jurisdiction/inspection-cadence "finishing"
-  :jurisdiction/inspection-cadence "commissioning"
+  :jurisdiction/inspection-cadence ["foundation" "structural" "mep" "finishing" "commissioning"]
   :jurisdiction/rpc-endpoint "https://open-registry.tokyo.jp/api/v1"
   :sourcing :representative}
 
@@ -20,11 +16,7 @@
   :jurisdiction/jurisdiction-name "California State"
   :jurisdiction/country "US"
   :jurisdiction/rules-version "2022-01-01"
-  :jurisdiction/inspection-cadence "foundation"
-  :jurisdiction/inspection-cadence "structural"
-  :jurisdiction/inspection-cadence "mep"
-  :jurisdiction/inspection-cadence "finishing"
-  :jurisdiction/inspection-cadence "commissioning"
+  :jurisdiction/inspection-cadence ["foundation" "structural" "mep" "finishing" "commissioning"]
   :jurisdiction/rpc-endpoint "https://dca.ca.gov/api/permits"
   :sourcing :representative}
 
@@ -33,11 +25,7 @@
   :jurisdiction/jurisdiction-name "Freistaat Bayern"
   :jurisdiction/country "DE"
   :jurisdiction/rules-version "2023-03-15"
-  :jurisdiction/inspection-cadence "foundation"
-  :jurisdiction/inspection-cadence "structural"
-  :jurisdiction/inspection-cadence "mep"
-  :jurisdiction/inspection-cadence "finishing"
-  :jurisdiction/inspection-cadence "commissioning"
+  :jurisdiction/inspection-cadence ["foundation" "structural" "mep" "finishing" "commissioning"]
   :jurisdiction/rpc-endpoint "https://bauamt.bayern.de/api/permits"
   :sourcing :representative}
 
@@ -59,16 +47,12 @@
  {:inspection-schedule/id "is.tokyo.demo.0001"
   :inspection-schedule/permit-application :pa.tokyo.demo.0001
   :inspection-schedule/jurisdiction :JP-13
-  :inspection-schedule/phase "foundation"
-  :inspection-schedule/phase "structural"
-  :inspection-schedule/phase "mep"
-  :inspection-schedule/phase "finishing"
-  :inspection-schedule/phase "commissioning"
-  :inspection-schedule/phase-date "2026-08-15T09:00:00Z"
-  :inspection-schedule/phase-date "2026-09-01T14:00:00Z"
-  :inspection-schedule/phase-date "2026-09-15T10:30:00Z"
-  :inspection-schedule/phase-date "2026-10-01T16:00:00Z"
-  :inspection-schedule/phase-date "2026-10-15T11:00:00Z"
+  :inspection-schedule/phases
+  [{:phase "foundation" :date "2026-08-15T09:00:00Z"}
+   {:phase "structural" :date "2026-09-01T14:00:00Z"}
+   {:phase "mep" :date "2026-09-15T10:30:00Z"}
+   {:phase "finishing" :date "2026-10-01T16:00:00Z"}
+   {:phase "commissioning" :date "2026-10-15T11:00:00Z"}]
   :inspection-schedule/inspector-did "did:web:tokyo-building-authority.jp:inspector:i001"
   :inspection-schedule/created-at "2026-06-05T12:00:00Z"
   :sourcing :representative}

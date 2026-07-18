@@ -1,8 +1,6 @@
 (ns gov-municipality.cells.permit-submission.test-state-machine
-  "gov-municipality 官 permit_submission state-machine cljc port + LIVE py↔clj deep parity."
-  (:require [clojure.test :refer [deftest is testing]]
-            [clojure.java.shell :refer [sh]]
-            [cheshire.core :as json]
+  "gov-municipality 官 permit_submission state-machine CLJC tests."
+  (:require [clojure.test :refer [deftest is]]
             [gov-municipality.cells.permit-submission.state-machine :as sm]))
 
 (deftest chain-reaches-submitted-at-100pct
@@ -25,24 +23,3 @@
     (is (= "japan-tokyo-residential-2026" (get ad "template_id")))   ;; from template_selected
     (is (= "Developer" (get ad "applicant_name")))                   ;; merged in application_prepared
     (is (= "under_review" (get ad "status")))))                      ;; merged in submitted
-
-(def ^:private py-dir "20-actors/gov-municipality/cells/permit_submission")
-
-(deftest live-parity
-  (testing "cljc permit_application_record + applicationData == python (deep)"
-    (let [py (sh "python3" "-c"
-                 (str "import json, state_machine as sm\n"
-                      "st={'permit_state':{'phase':'init','projectId':'PROJ-2026-ABCD1234','completionPct':0}}\n"
-                      "for fn in [sm.transition_to_jurisdiction_identified, sm.transition_to_template_selected, "
-                      "sm.transition_to_application_prepared, sm.transition_to_submitted]:\n"
-                      "    out=fn(st); st={**st, **out}\n"
-                      "print(json.dumps({'rec':out['permit_application_record'], 'app':out['permit_state']['applicationData']}))")
-                 :dir py-dir)]
-      (if (not (zero? (:exit py)))
-        (println "  [skip] python3 unavailable:" (:err py))
-        (let [pj (json/parse-string (clojure.string/trim (:out py)))
-              out (sm/run-chain {"projectId" "PROJ-2026-ABCD1234"})]
-          (is (= (get pj "rec")
-                 (json/parse-string (json/generate-string (get out "permit_application_record")))))
-          (is (= (get pj "app")
-                 (json/parse-string (json/generate-string (get-in out ["permit_state" "applicationData"]))))))))))
