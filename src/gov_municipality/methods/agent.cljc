@@ -13,7 +13,24 @@
     G17 tithe-non-fiat           fee settlement via USDC Base L2 + ERC-4337 + TitheRouter 10%
     G18 no-server-key            member + jurisdiction operator sign; platform holds no key
     G19 consent-bound            submission + scheduling + sign-off gated on member explicit consent
-    G20 pii-encrypted-envelope   applicant details encrypted com.etzhayyim.encrypted.*")
+    G20 pii-encrypted-envelope   applicant details encrypted com.etzhayyim.encrypted.*
+
+  Runtime: this file is `.cljc` and is now portable in fact as well as in
+  extension. Until 2026-08-31 it read `System/currentTimeMillis` and referred
+  to `clojure.string/split` without requiring that namespace, so it loaded only
+  under Babashka, which preloads `clojure.string` — and `bb` is a retired script
+  host here (ADR-2607173000). The tests that cover it therefore ran on one host
+  and one host only. Nothing about the gates changed; only how the clock and the
+  string functions are reached."
+  (:require [clojure.string :as str]))
+
+(defn- now-ms
+  "Wall clock in milliseconds. The only impure call in this namespace, kept in
+  one place so the permit/schedule/record id derivations below stay pure
+  functions of it."
+  []
+  #?(:clj (System/currentTimeMillis)
+     :cljs (.now js/Date)))
 
 (def tithe-bps 1000) ; 10% TitheRouter auto-split (G17), basis points
 
@@ -24,14 +41,14 @@
 (defn enforce-member-consent
   "Verify Adherent SBT active for member before permit submission (G19)."
   [member-did]
-  (if (and (seq member-did) (.startsWith ^String member-did "did:"))
+  (if (and (seq member-did) (str/starts-with? member-did "did:"))
     {:ok true  :reason "member DID valid"}
     {:ok false :reason "invalid member DID format (G19)"}))
 
 (defn enforce-jurisdiction-authority
   "Verify municipal authority DID for jurisdiction (no-server-key, G18)."
   [jurisdiction-id authority-did]
-  (if (and (seq jurisdiction-id) (.startsWith ^String authority-did "did:"))
+  (if (and (seq jurisdiction-id) (str/starts-with? authority-did "did:"))
     {:ok true  :reason "jurisdiction authority valid"}
     {:ok false :reason "invalid jurisdiction or authority DID (G18)"}))
 
@@ -44,7 +61,7 @@
   [site-id building-type total-cost gfa-m2]
   (if (or (not (seq site-id)) (not (seq building-type)))
     {:error "siteId and buildingType required" :jurisdiction-id nil}
-    (let [parts (clojure.string/split site-id #"-")]
+    (let [parts (str/split site-id #"-")]
       (if (< (count parts) 2)
         {:error (str "siteId malformed: " site-id) :jurisdiction-id nil}
         (let [jurisdiction-id (if (= (first parts) "Tokyo")
@@ -61,9 +78,9 @@
   ([member-did jurisdiction-id building-type scope]
    (form-permit-application member-did jurisdiction-id building-type scope ""))
   ([member-did jurisdiction-id building-type scope drawings-cid]
-   (if (not (.startsWith ^String member-did "did:"))
+   (if (not (str/starts-with? member-did "did:"))
      {:error "invalid member DID (G19)" :blocked true}
-     (let [ts   (System/currentTimeMillis)
+     (let [ts   (now-ms)
            secs (quot ts 1000)
            suffix (subs member-did (- (count member-did) (min 8 (count member-did))))]
        {:permit-application/id           (str "pa." jurisdiction-id "." suffix "." secs)
@@ -107,13 +124,13 @@
   "Schedule 5 canonical inspection phases per jurisdiction."
   [jurisdiction-id permit-application-id]
   (let [phases ["foundation" "structural" "mep" "finishing" "commissioning"]
-        ts     (quot (System/currentTimeMillis) 1000)
+        ts     (quot (now-ms) 1000)
         pa-len (count permit-application-id)
         suffix (subs permit-application-id (max 0 (- pa-len 8)))]
     {:inspection-schedule/id                (str "is." jurisdiction-id "." suffix "." ts)
      :inspection-schedule/permit-application permit-application-id
      :inspection-schedule/jurisdiction       jurisdiction-id
-     :inspection-schedule/phases             (clojure.string/join "," phases)
+     :inspection-schedule/phases             (str/join "," phases)
      :reason                                 (str "scheduled " (count phases) " phases for " jurisdiction-id)}))
 
 (defn handle-inspection-scheduling
@@ -125,7 +142,7 @@
       {:error "permit_application_id and jurisdiction_id required" :blocked true}
       (let [schedule (schedule-inspection-phases jurisdiction-id permit-application-id)]
         {:inspection_schedule_id (:inspection-schedule/id schedule)
-         :phases                 (clojure.string/split (:inspection-schedule/phases schedule) #",")
+         :phases                 (str/split (:inspection-schedule/phases schedule) #",")
          :state                  "inspecting"
          :next_step              "final_sign_off"}))))
 
@@ -153,7 +170,7 @@
        {:error (:reason auth-check) :blocked true}
        (if (not (seq authority-signature))
          {:error "authority_signature required (G18)" :blocked true}
-         (let [ts     (quot (System/currentTimeMillis) 1000)
+         (let [ts     (quot (now-ms) 1000)
                pa-len (count permit-application-id)
                suffix (subs permit-application-id (max 0 (- pa-len 8)))]
            {:permits-finalized-record/id                (str "pfr." jurisdiction-id "." suffix "." ts)
