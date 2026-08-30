@@ -84,17 +84,39 @@ Cells communicate via lexicon records on MST (`com.etzhayyim.gov.*`).
   2. `request_authority_signature` — RPC → municipal signatory
   3. `emit_occupancy_clearance` → write `permitsFinalizedRecord` to MST
 
-## Testing (R0)
+## Testing
 
-**Smoke test**: Verify all 3 cells import without exception:
+From the repo root:
+
 ```bash
-cd 20-actors/gov-municipality
-python -c "from cells.permit_submission import PermitSubmissionCell; assert PermitSubmissionCell"
-python -c "from cells.inspection_scheduling import InspectionSchedulingCell; assert InspectionSchedulingCell"
-python -c "from cells.final_sign_off import FinalSignOffCell; assert FinalSignOffCell"
+nbb --classpath src:test run_tests.cljs
 ```
 
-All should pass import; `.solve()` calls should raise `RuntimeError("gov-municipality R0 scaffold...")`.
+Three exit codes, and they are three different claims:
+
+- **0** — every test passed *and* enough of them ran to mean something. Prints
+  `gov-municipality: all green`.
+- **1** — something failed.
+- **2** — REFUSED. Fewer tests ran than the floor in `run_tests.cljs`, so the
+  run did not measure the suite it claims to. Without this, a namespace dropped
+  from the runner's list prints the same `0 failures` as a full green run.
+
+The suite covers the three cell state machines, the permitting gate methods,
+the cljc actor boundary (`src/gov_municipality/murakumo.cljc`, whose fail-closed
+gate had never been executed on any runtime before 2026-08-31), and cross-file
+agreement between `manifest.edn`, `kotoba.app.edn`, `cells/*.edn`, `lex/*.edn`
+and `.well-known/did.json`.
+
+Sources live under `src/gov_municipality/` and tests under
+`test/gov_municipality/`, so a namespace and its path agree and the classpath is
+just `src:test`. Until 2026-08-31 the cells sat at the top level and the runner
+was `run_tests.sh`, which built a mktemp symlink farm to paper over the
+mismatch and drove the suite through `bb` — a retired script host here
+(ADR-2607173000).
+
+The earlier Python smoke test documented in this section described
+`cells/*/__init__.py` files that are not in the tree; the Python port was
+completed to cljc and the originals removed.
 
 ## Related Files
 
