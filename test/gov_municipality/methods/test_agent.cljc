@@ -4,7 +4,7 @@
   Exercises the permitting constitutional gates: member consent (G19),
   jurisdiction authority (G18), permit submission (G1/G15/G16),
   inspection scheduling, final sign-off (G3/G18), and the USDC + tithe settlement (G17)."
-  (:require [clojure.test :refer [deftest is testing run-tests]]
+  (:require [kotoba.lang.text] [clojure.test :refer [deftest is testing run-tests]]
             [gov-municipality.methods.agent :as agent]))
 
 ;; ---------------------------------------------------------------------------
@@ -99,7 +99,7 @@
 (deftest test-schedule-inspection-phases
   (testing "5 inspection phases scheduled (G1/G15/G16)"
     (let [result (agent/schedule-inspection-phases "JP-13" "pa.JP-13.test.1")
-          phases (clojure.string/split (:inspection-schedule/phases result) #",")]
+          phases (kotoba.lang.text/split (:inspection-schedule/phases result) #",")]
       (is (and (= 5 (count phases))
                (some #(= "foundation" %) phases))))))
 

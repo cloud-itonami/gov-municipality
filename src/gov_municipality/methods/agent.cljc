@@ -17,12 +17,12 @@
 
   Runtime: this file is `.cljc` and is now portable in fact as well as in
   extension. Until 2026-08-31 it read `System/currentTimeMillis` and referred
-  to `clojure.string/split` without requiring that namespace, so it loaded only
+  to `str/split` without requiring that namespace, so it loaded only
   under Babashka, which preloads `clojure.string` — and `bb` is a retired script
   host here (ADR-2607173000). The tests that cover it therefore ran on one host
   and one host only. Nothing about the gates changed; only how the clock and the
   string functions are reached."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (defn- now-ms
   "Wall clock in milliseconds. The only impure call in this namespace, kept in
