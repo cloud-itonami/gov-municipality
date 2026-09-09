@@ -12,7 +12,7 @@
   was not one of them, so every claim about this gate was true by inspection
   only."
   (:require [clojure.test :refer [deftest is testing]]
-            [kotoba.lang.text :as str]
+            [clojure.string :as str]
             [gov_municipality.murakumo :as m]))
 
 (def all-attested
