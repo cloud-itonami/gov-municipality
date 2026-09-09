@@ -22,7 +22,7 @@
   host here (ADR-2607173000). The tests that cover it therefore ran on one host
   and one host only. Nothing about the gates changed; only how the clock and the
   string functions are reached."
-  (:require [kotoba.lang.text :as str]))
+  (:require [clojure.string :as str]))
 
 (defn- now-ms
   "Wall clock in milliseconds. The only impure call in this namespace, kept in
