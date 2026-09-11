@@ -189,7 +189,7 @@
 
 (deftest shell-scripts-are-confined-to-the-one-that-is-known
   (testing "ADR-2607173000 retires bb and the workspace prohibits new .sh; this pins what is left"
-    ;; kotoba/deploy.sh still drives `bb kotoba/ingest_mcp.cljk` and a
+    ;; kotoba/deploy.sh still drives `kbb kotoba/ingest_mcp.cljk` and a
     ;; componentize-py build out of a py/ directory that is no longer in the
     ;; tree. Porting it needs a live kotoba node to test against, so it is
     ;; named here instead of quietly left to grow company.
