@@ -89,7 +89,7 @@ Cells communicate via lexicon records on MST (`com.etzhayyim.gov.*`).
 From the repo root:
 
 ```bash
-nbb --classpath src:test run_tests.cljk
+kbb --backend sci --classpath src:test run_tests.cljk
 ```
 
 Three exit codes, and they are three different claims:

@@ -1,4 +1,4 @@
-#!/usr/bin/env bb
+#!/usr/bin/env kbb
 ;; gov-municipality 自治体 — ingest seed.edn into a live kotoba node (cljc port of ingest_mcp.py).
 ;; ADR-2605250800.
 (ns gov-municipality.kotoba.ingest-mcp

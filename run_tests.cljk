@@ -1,9 +1,9 @@
-#!/usr/bin/env nbb
+#!/usr/bin/env kbb
 ;; run_tests.cljk — the whole suite, with a floor under what counts as a pass.
 ;;
 ;; Run it from the repo root:
 ;;
-;;   nbb --classpath src:test run_tests.cljk
+;;   kbb --backend sci --classpath src:test run_tests.cljk
 ;;
 ;; This replaces run_tests.sh, which drove the same four namespaces through
 ;; `bb`. That worked, but bb is a retired script host here (ADR-2607173000) and
