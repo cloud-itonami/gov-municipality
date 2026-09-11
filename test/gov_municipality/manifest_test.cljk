@@ -28,7 +28,7 @@
 
 (defn- slurp*
   "Read a tracked file, or refuse. Not finding it is a third answer, not a clean
-  one — see `run_tests.cljs` for why a pass has a floor under it."
+  one — see `run_tests.cljk` for why a pass has a floor under it."
   [rel]
   (let [p (path/join repo-root rel)]
     (when-not (fs/existsSync p)
@@ -189,7 +189,7 @@
 
 (deftest shell-scripts-are-confined-to-the-one-that-is-known
   (testing "ADR-2607173000 retires bb and the workspace prohibits new .sh; this pins what is left"
-    ;; kotoba/deploy.sh still drives `bb kotoba/ingest_mcp.cljc` and a
+    ;; kotoba/deploy.sh still drives `bb kotoba/ingest_mcp.cljk` and a
     ;; componentize-py build out of a py/ directory that is no longer in the
     ;; tree. Porting it needs a live kotoba node to test against, so it is
     ;; named here instead of quietly left to grow company.

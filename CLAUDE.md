@@ -89,7 +89,7 @@ Cells communicate via lexicon records on MST (`com.etzhayyim.gov.*`).
 From the repo root:
 
 ```bash
-nbb --classpath src:test run_tests.cljs
+nbb --classpath src:test run_tests.cljk
 ```
 
 Three exit codes, and they are three different claims:
@@ -97,12 +97,12 @@ Three exit codes, and they are three different claims:
 - **0** — every test passed *and* enough of them ran to mean something. Prints
   `gov-municipality: all green`.
 - **1** — something failed.
-- **2** — REFUSED. Fewer tests ran than the floor in `run_tests.cljs`, so the
+- **2** — REFUSED. Fewer tests ran than the floor in `run_tests.cljk`, so the
   run did not measure the suite it claims to. Without this, a namespace dropped
   from the runner's list prints the same `0 failures` as a full green run.
 
 The suite covers the three cell state machines, the permitting gate methods,
-the cljc actor boundary (`src/gov_municipality/murakumo.cljc`, whose fail-closed
+the cljc actor boundary (`src/gov_municipality/murakumo.cljk`, whose fail-closed
 gate had never been executed on any runtime before 2026-08-31), and cross-file
 agreement between `manifest.edn`, `kotoba.app.edn`, `cells/*.edn`, `lex/*.edn`
 and `.well-known/did.json`.
