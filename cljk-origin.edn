@@ -1,0 +1,22 @@
+{:format :kotoba.cljk-origin/v1
+ :renamed-on "2026-09-11"
+ :decision "adr-2609111500-cljk-rename-all-clojure-source (com-junkawasaki/root 90-docs/adr; owner instruction 2026-09-11)"
+ :rule "value = the extension the file had before the rename. A path ending in .clj.cljk or .cljs.cljk kept it in the name because both platform files existed (or the plain target was taken)."
+ :origins
+ {"kotoba/ingest_mcp.cljk" ".cljc"
+  "run_tests.cljk" ".cljs"
+  "src/gov_municipality/cells/final_sign_off/cell.cljk" ".cljc"
+  "src/gov_municipality/cells/final_sign_off/state_machine.cljk" ".cljc"
+  "src/gov_municipality/cells/inspection_scheduling/cell.cljk" ".cljc"
+  "src/gov_municipality/cells/inspection_scheduling/state_machine.cljk" ".cljc"
+  "src/gov_municipality/cells/permit_submission/state_machine.cljk" ".cljc"
+  "src/gov_municipality/cells/social_post/state_machine.cljk" ".cljc"
+  "src/gov_municipality/methods/agent.cljk" ".cljc"
+  "src/gov_municipality/methods/social.cljk" ".cljc"
+  "src/gov_municipality/murakumo.cljk" ".cljc"
+  "test/gov_municipality/cells/final_sign_off/test_state_machine.cljk" ".cljc"
+  "test/gov_municipality/cells/inspection_scheduling/test_state_machine.cljk" ".cljc"
+  "test/gov_municipality/cells/permit_submission/test_state_machine.cljk" ".cljc"
+  "test/gov_municipality/manifest_test.cljk" ".cljs"
+  "test/gov_municipality/methods/test_agent.cljk" ".cljc"
+  "test/gov_municipality/murakumo_test.cljk" ".cljc"}}

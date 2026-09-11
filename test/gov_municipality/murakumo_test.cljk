@@ -1,5 +1,5 @@
 (ns gov_municipality.murakumo-test
-  "Invariants of the pure cljc actor boundary in `src/gov_municipality/murakumo.cljc`.
+  "Invariants of the pure cljc actor boundary in `src/gov_municipality/murakumo.cljk`.
 
   The one this suite exists for is fail-closed planning: `cell-plan` must not
   emit a single `:mst/put-record` effect unless every gate in `common-gates` is
