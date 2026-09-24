@@ -16,7 +16,7 @@
   when a file is not where they expect it."
   (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.lang.edn :as edn]
-            [clojure.set :as set]
+            [kotoba.lang.coll :as set]
             [kotoba.lang.text :as str]
             ["node:fs" :as fs]
             ["node:path" :as path]
