@@ -1,6 +1,6 @@
 (ns gov-municipality.cells.final-sign-off.test-state-machine
   "Tests for gov-municipality final_sign_off state machine (ADR-2605250800)."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [gov-municipality.cells.final-sign-off.state-machine :as sm]))
 
 (deftest chain-reaches-end-at-100pct

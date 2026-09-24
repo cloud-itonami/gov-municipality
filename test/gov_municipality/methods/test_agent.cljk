@@ -4,7 +4,7 @@
   Exercises the permitting constitutional gates: member consent (G19),
   jurisdiction authority (G18), permit submission (G1/G15/G16),
   inspection scheduling, final sign-off (G3/G18), and the USDC + tithe settlement (G17)."
-  (:require [kotoba.lang.text] [clojure.test :refer [deftest is testing run-tests]]
+  (:require [kotoba.lang.text] [kotoba.test :refer [deftest is testing run-tests]]
             [gov-municipality.methods.agent :as agent]))
 
 ;; ---------------------------------------------------------------------------
