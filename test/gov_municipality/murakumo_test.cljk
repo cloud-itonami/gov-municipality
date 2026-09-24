@@ -11,7 +11,7 @@
   repo's only runner was `run_tests.sh`, which listed four namespaces and this
   was not one of them, so every claim about this gate was true by inspection
   only."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.lang.text :as str]
             [gov_municipality.murakumo :as m]))
 

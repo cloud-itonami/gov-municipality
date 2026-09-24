@@ -1,6 +1,6 @@
 (ns gov-municipality.cells.permit-submission.test-state-machine
   "gov-municipality 官 permit_submission state-machine CLJC tests."
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [gov-municipality.cells.permit-submission.state-machine :as sm]))
 
 (deftest chain-reaches-submitted-at-100pct

@@ -24,7 +24,7 @@
 ;; "0 failures" as a full green run. The marker on stdout is only printed on a
 ;; real pass, so a caller can tell the two apart without parsing counts.
 (ns run-tests
-  (:require [clojure.test :as t]
+  (:require [kotoba.test :as t]
             [gov-municipality.methods.test-agent]
             [gov-municipality.cells.permit-submission.test-state-machine]
             [gov-municipality.cells.final-sign-off.test-state-machine]

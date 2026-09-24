@@ -1,6 +1,6 @@
 (ns gov-municipality.cells.inspection-scheduling.test-state-machine
   "Tests for gov-municipality inspection_scheduling state machine (ADR-2605250800)."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [gov-municipality.cells.inspection-scheduling.state-machine :as sm]))
 
 (deftest chain-reaches-complete
