@@ -5,14 +5,14 @@
   "gov-municipality 自治体 — MCP seed-ingest scaffold (dry-run default, live path placeholder).
   ADR-2605250800. Template: see funadaiku.kotoba.ingest-mcp."
   (:require [kotoba.lang.text :as str]
-            #?(:clj [clojure.java.io :as io])))
+            #?(:clj [kotoba.io :as io])))
 
 (def default-url   "http://127.0.0.1:8077")
 (def default-graph "com.etzhayyim.govmunicipality")
 
 #?(:clj
    (def seed-path
-     (str (-> (io/file *file*) .getParentFile .getAbsolutePath)
+     (str (-> (io/file *file*) io/parent-file io/absolute-path)
           "/seed.edn")))
 
 (defn strip-comments [^String s]
