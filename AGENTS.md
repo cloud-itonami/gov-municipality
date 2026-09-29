@@ -1,4 +1,4 @@
-# 20-actors/gov-municipality — CLAUDE.md
+# 20-actors/gov-municipality — AGENTS.md
 
 ## Identity
 - **Name**: gov-municipality (政府・自治体 — government + municipal authority)
@@ -122,4 +122,4 @@ completed to cljc and the originals removed.
 
 - `/20-actors/gov-municipality/manifest.jsonld` — DID + cell registry
 - `/90-docs/adr/2605250800-gov-municipality-phase-0-permits-r0.md` — ADR (parent)
-- `/CLAUDE.md` — Status table row TBD (gov-municipality)
+- `/AGENTS.md` — Status table row TBD (gov-municipality)
